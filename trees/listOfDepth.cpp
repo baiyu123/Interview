@@ -5,13 +5,13 @@ using namespace std;
 
 struct node{
 	int value;
-	node left == NULL;
-	node right == NULL;
+	node* left == NULL;
+	node* right == NULL;
 };
 
-helper(node* currNode, int depth, vector<vector<int>>& result){
-	if(root == NULL){
-
+void helper(node* currNode, int depth, vector<vector<int>>& result){
+	if(currNode == NULL){
+    return;
 	}
 	else{
 		if(result.size() < depth+1){
@@ -30,6 +30,7 @@ helper(node* currNode, int depth, vector<vector<int>>& result){
 vector<vector<int>> getList(node* root){
 	vector<vector<int>> result;
 	helper(root,0, result);
+  return result;
 }
 
 int main(){

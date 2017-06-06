@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>6968D7EF-A12B-4A38-A27B-FA93FC597259</string>
+	<key>IDESourceControlProjectName</key>
+	<string>interview</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>E0DCEE42F5241FA7DFB8772BA9A13CF20619474E</key>
+		<string>https://github.com/baiyu123/Interview.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>interview.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>E0DCEE42F5241FA7DFB8772BA9A13CF20619474E</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/baiyu123/Interview.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>E0DCEE42F5241FA7DFB8772BA9A13CF20619474E</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>E0DCEE42F5241FA7DFB8772BA9A13CF20619474E</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Interview</string>
+		</dict>
+	</array>
+</dict>
+</plist>
