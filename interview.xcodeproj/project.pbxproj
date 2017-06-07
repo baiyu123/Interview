@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6CD6148B1EE652440096118B /* numOfHole.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6CD6148A1EE652440096118B /* numOfHole.cpp */; };
+		6CBCBD7F1EE7AAAC00AF2F09 /* telexEncoding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6CBCBD7E1EE7AAAC00AF2F09 /* telexEncoding.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -23,9 +23,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		6CD614721EE5F2190096118B /* interview */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = interview; path = /Users/baiyu/Desktop/Interview/build/Debug/interview; sourceTree = "<absolute>"; };
+		6CBCBD7B1EE78F1900AF2F09 /* interview */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = interview; sourceTree = BUILT_PRODUCTS_DIR; };
+		6CBCBD7E1EE7AAAC00AF2F09 /* telexEncoding.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = telexEncoding.cpp; path = string/telexEncoding.cpp; sourceTree = "<group>"; };
 		6CD614861EE60BA70096118B /* dataStructure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dataStructure.h; sourceTree = "<group>"; };
-		6CD6148A1EE652440096118B /* numOfHole.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = numOfHole.cpp; path = IXL/numOfHole.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,7 +43,8 @@
 			isa = PBXGroup;
 			children = (
 				6CD614861EE60BA70096118B /* dataStructure.h */,
-				6CD6148A1EE652440096118B /* numOfHole.cpp */,
+				6CBCBD7B1EE78F1900AF2F09 /* interview */,
+				6CBCBD7E1EE7AAAC00AF2F09 /* telexEncoding.cpp */,
 			);
 			sourceTree = "<group>";
 		};
@@ -64,7 +65,7 @@
 			);
 			name = interview;
 			productName = interview;
-			productReference = 6CD614721EE5F2190096118B /* interview */;
+			productReference = 6CBCBD7B1EE78F1900AF2F09 /* interview */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -103,7 +104,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6CD6148B1EE652440096118B /* numOfHole.cpp in Sources */,
+				6CBCBD7F1EE7AAAC00AF2F09 /* telexEncoding.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
