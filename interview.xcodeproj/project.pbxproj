@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6CCCD2E71EE8EC25004C3FB6 /* sinusoidalWord.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6CCCD2E61EE8EC25004C3FB6 /* sinusoidalWord.cpp */; };
+		6CB322D01EEE3FD10029EF35 /* cyclePermute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6CB322CF1EEE3FD10029EF35 /* cyclePermute.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -23,8 +23,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		6CB322CF1EEE3FD10029EF35 /* cyclePermute.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cyclePermute.cpp; path = array/cyclePermute.cpp; sourceTree = "<group>"; };
 		6CBCBD7B1EE78F1900AF2F09 /* interview */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = interview; sourceTree = BUILT_PRODUCTS_DIR; };
-		6CCCD2E61EE8EC25004C3FB6 /* sinusoidalWord.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sinusoidalWord.cpp; path = string/sinusoidalWord.cpp; sourceTree = "<group>"; };
 		6CD614861EE60BA70096118B /* dataStructure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dataStructure.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -44,7 +44,7 @@
 			children = (
 				6CD614861EE60BA70096118B /* dataStructure.h */,
 				6CBCBD7B1EE78F1900AF2F09 /* interview */,
-				6CCCD2E61EE8EC25004C3FB6 /* sinusoidalWord.cpp */,
+				6CB322CF1EEE3FD10029EF35 /* cyclePermute.cpp */,
 			);
 			sourceTree = "<group>";
 		};
@@ -104,7 +104,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6CCCD2E71EE8EC25004C3FB6 /* sinusoidalWord.cpp in Sources */,
+				6CB322D01EEE3FD10029EF35 /* cyclePermute.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
