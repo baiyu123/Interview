@@ -21,3 +21,16 @@ struct BTNode
     return right;
   }
 };
+
+struct LLNode{
+  int val;
+  LLNode* next;
+  LLNode(int newVal){
+    val = newVal;
+    next = NULL;
+  }
+  LLNode* emplace(int num){
+    next = new LLNode(num);
+    return next;
+  }
+};
