@@ -36,6 +36,12 @@ void printVec(vector<int>& arr){
 		cout << elem << endl;
 	}
 }
+void printVec(vector<double>& arr){
+	for(auto elem : arr){
+		cout << elem << endl;
+	}
+}
+
 
 vector<int> increaseDecrease(vector<int>& array){
 	vector<vector<int>> increseArrays;
@@ -74,6 +80,13 @@ public:
 	}
 };
 
+class maxComp{
+public:
+	bool operator()(int a, int b){
+		return a < b;
+	}
+};
+
 void almostSorted(int k, vector<int>& input){
 	priority_queue<int, vector<int>, minComp> minHeap;
 	for(int i = 0; i < k; i++){
@@ -90,10 +103,60 @@ void almostSorted(int k, vector<int>& input){
 	}
 }
 
+////////////////////median of stream data////////////
+
+vector<double> medianStream(vector<int>& data){
+	priority_queue<int, vector<int>, maxComp> maxHeap;
+	priority_queue<int, vector<int>, minComp> minHeap;
+	vector<double> result;
+	for(int i = 0; i < data.size(); i++){
+		minHeap.push(data[i]);
+		if(minHeap.size()-1 > maxHeap.size()){
+			maxHeap.push(minHeap.top());
+			minHeap.pop();
+			result.push_back(((double)minHeap.top()+maxHeap.top())/2);
+		}
+		else{
+			result.push_back(minHeap.top());
+		}
+	}
+	return result;
+}
+
+//////////stack with heap////////////////
+class TheStack{
+public:
+	int top(){
+		return maxHeap.top().val;
+	}
+	void push(int val){
+		heapElem elem;
+		elem.time = timeStamp++;
+		elem.val = val;
+		maxHeap.push(elem);
+	}
+	void pop(){
+		maxHeap.pop();
+	}
+
+private:
+	int timeStamp = 0;
+	struct heapElem{
+		int time, val;
+		bool operator<(const heapElem other) const{
+			return time < other.time;
+		}
+	};
+	priority_queue<heapElem, vector<heapElem>> maxHeap;
+};
+
 
 int main(){
-	vector<int> input = {3,-1,2,6,4,5,8};
-	almostSorted(2,input);
-	printVec(input);
+	TheStack myStack;
+	myStack.push(2);
+	myStack.push(3);
+	cout << myStack.top() << endl;
+	myStack.pop();
+	cout << myStack.top() << endl;
 	return 0;
 }
