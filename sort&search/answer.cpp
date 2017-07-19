@@ -4,6 +4,7 @@
 #include <deque>
 #include <queue>
 #include <unordered_map>
+#include <unordered_set>
 #include <climits>
 
 using namespace std;
@@ -360,7 +361,210 @@ int nearestRepeatedDist(vector<string>& input){
 }
 
 
+////////////////////longest contained interval ///////////////
+
+int longestContainedInter(vector<int>& arr){
+	unordered_set<int> set;
+	for(int i = 0; i < arr.size(); i++){
+		set.emplace(arr[i]);
+	}
+	int countMax = 0;
+	for(int i = 0; i < arr.size(); i++){
+		int count = 0;
+		int offset = 0;
+		while(true){
+			auto it = set.find(arr[i]+offset);
+			if(it != set.end()){
+				count++;
+				set.erase(it);
+			}
+			else{
+				break;
+			}
+			offset++;
+		}
+		offset = -1;
+		while(true){
+			auto it = set.find(arr[i]+offset);
+			if(it != set.end()){
+				count++;
+				set.erase(it);
+			}
+			else{
+				break;
+			}
+			offset--;
+		}
+		countMax = max(count, countMax);
+	}
+	return countMax;
+}
+
+/////////////////////all string decomposition////////
+
+string allStrDecomp(string sentence, vector<string>& words){
+	unordered_map<string, int> wordMap;
+	for(int i = 0; i < words.size(); i++){
+		auto it = wordMap.find(words[i]);
+		if(it != wordMap.end()){
+			it->second++;
+		}
+		else{
+			wordMap[words[i]] = 1;
+		}
+	}
+	int size = words[0].size();
+	int start = 0;
+	int end = 0;
+	for(int i = 0; i < sentence.size()-size; i++){
+		unordered_map<string, int> tempMap = wordMap;
+		auto it = tempMap.find(sentence.substr(i,size));
+		if(it != wordMap.end()){
+			start = i;
+			int offset = 0;
+			while(it != tempMap.end()){
+				it->second--;
+				if(it->second == 0){
+					tempMap.erase(it);
+				}
+				offset++;
+				if(offset*size+i > sentence.size()||tempMap.size() == 0){
+					end = offset*size+i;
+					break;
+				}
+				it = tempMap.find(sentence.substr(offset*size+i,size));
+			}
+			if(end-start == size*words.size()) break;
+		}
+	}
+	return sentence.substr(start, end-start);
+}
+
+
+//////////////////////////Arrary intersect////////////
+
+vector<int> computerArrsIntersect(vector<int>& arr1, vector<int>& arr2){
+	int index1 = 0;
+	int index2 = 0;
+	int prevNum = 0;
+	vector<int> result;
+	while(index1<arr1.size() && index2<arr2.size()){
+		if(arr1[index1] < arr2[index2]){
+			index1++;
+		}
+		else if(arr1[index1] > arr2[index2]){
+			index2++;
+		}
+		else if(arr1[index1]==arr2[index2]&&prevNum!=arr1[index1]){
+			result.push_back(arr1[index1]);
+			index1++;
+			index2++;
+			prevNum = arr1[index1];
+		}
+		else{
+			index1++;
+			index2++;
+		}
+	}
+	return result;
+}
+
+//////////////////first name duplicate///////////
+class Name{
+public:
+	string first_name, last_name;
+	Name(string first, string last){
+		first_name = first;
+		last_name = last;
+	}
+	bool operator<(const Name& other){
+		return this->first_name < other.first_name;
+	}
+	bool operator==(const Name& other){
+		return this->first_name == other.first_name;
+	}
+};
+
+void removeFirstNameDup(vector<Name>& arr){
+	sort(arr.begin(),arr.end());
+	for(int i = 0; i < arr.size()-1; i++){
+		int next = i+1;
+		while(arr[next] == arr[i]&&next < arr.size()){
+			arr.erase(arr.begin()+next);
+		}
+	}
+}
+
+void printNameArr(vector<Name>& arr){
+	for(int i = 0; i < arr.size(); i++){
+		cout << arr[i].first_name << " " << arr[i].last_name << endl;
+	}
+}
+
+///////////////////////smallest non constructible value////////////
+int smallestNonContructible(vector<int>& arr){
+	int currVal = arr[0];
+	int currSum = 0;
+	sort(arr.begin(), arr.end());
+	for(int i = 0; i < arr.size(); i++){
+		if(currVal == arr[i]){
+			currSum += arr[i];
+		}
+		else{
+			currVal = arr[i];
+			if(currSum < arr[i]-1){
+				break;
+			}
+			currSum += arr[i];
+		}
+	}
+	return currSum+1;
+}
+
+////////////////////maximum concurent////////////
+class Event{
+public:
+	int Time;
+	bool start;
+	Event(int newTime, bool is_start){
+		Time = newTime;
+		start = is_start;
+	}
+	bool operator<(const Event& other){
+		if(Time != other.Time){
+			return Time < other.Time;
+		}
+		else{
+			if(start) return false;
+			return true;
+		}
+	}
+};
+
+int maxConcurrentEvent(vector<Event>& arr){
+	sort(arr.begin(), arr.end());
+	int count = 0;
+	int maxCount = 0;
+	for(int i = 0; i<arr.size(); i++){
+		if(arr[i].start){
+			count++;
+		}
+		else{
+			count--;
+		}
+		maxCount = max(maxCount, count);
+	}
+	return maxCount;
+}
+
+
 int main(){
-	vector<string> input = {"All","work","and","no","play","makes","for","no","work","no","fun","and","no","results"};
-	cout << nearestRepeatedDist(input) << endl;
+	Event e1(1,true);
+	Event e4(5,false);
+	Event e2(2,true);
+	Event e6(7,false);
+	Event e3(5,true);
+	Event e5(9,false);
+	vector<Event> input = {e1,e4,e2,e6,e3,e5};
+	cout << maxConcurrentEvent(input) << endl;
 }
