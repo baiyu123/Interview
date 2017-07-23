@@ -557,14 +557,185 @@ int maxConcurrentEvent(vector<Event>& arr){
 	return maxCount;
 }
 
+///////////////////////merge interval//////////
+
+class Interval{
+public:
+	int start;
+	int end;
+	Interval(int new_start, int new_end){
+		start = new_start;
+		end = new_end;
+	}
+	bool operator<(const Interval& other){
+		return start < other.start;
+	}
+};
+
+
+void printInteval(vector<Interval>& inte){
+	for(int i = 0; i < inte.size(); i++){
+		cout << "start: " << inte[i].start << " end: " << inte[i].end << endl;
+	}
+}
+
+
+Interval UnionInterval(Interval inte1, Interval inte2){
+	int left = min(inte1.start, inte2.start);
+	int right = max(inte1.end, inte2.end);
+	Interval inte(left, right);
+	return inte;
+}
+
+vector<Interval> mergeInterval(vector<Interval>& input, Interval newInter){
+	sort(input.begin(), input.end());
+	vector<Interval> result;
+	int left = 0;
+	int right = 0;
+	for(int i = 0; i < input.size(); i++){
+
+		if((newInter.start >= input[i].start&&newInter.start <= input[i].end)||(newInter.end >= input[i].start&&newInter.end <= input[i].end)){
+			left = i;
+			break;
+		}
+		else if(newInter.start < input[i].start && newInter.end < input[i].start){
+			left = i;
+			break;
+		}
+		result.push_back(input[i]);
+	}
+	for(int i = left; i < input.size(); i++){
+		if(newInter.end < input[i].start){
+			right = i;
+			break;
+		}
+		else{
+			newInter = UnionInterval(newInter,input[i]);
+		}
+	}
+	result.push_back(newInter);
+
+	for(int i = right; i < input.size(); i++){
+		result.push_back(input[i]);
+	}
+	return result;
+}
+
+vector<Interval> mergeIntervalOld(vector<Interval>& input, Interval newInter){
+	sort(input.begin(), input.end());
+	vector<Interval> result;
+	int left = 0;
+	int right = 0;
+	for(int i = 0; i < input.size(); i++){
+		result.push_back(input[i]);
+		if(newInter.start < input[i].start){
+			left = i;
+			if(i>0&&newInter.start < input[i-1].end){
+				result[i-1].end = result[i].end;
+				result.pop_back();
+			}
+			input[i].start = newInter.start;
+			break;
+		}
+	}
+	printInteval(result);
+	cout << "///////////" << endl;
+	bool found = false;
+	for(int i = left; i < input.size()-1; i++){
+		if(found) result.push_back(input[i]);
+		if(newInter.end < input[i].end){
+			found = true;
+			if(newInter.end > input[i].start){
+				result.back().end = input[i].end;
+			}
+			else{
+				result.back().end = newInter.end;
+				result.push_back(input[i]);
+			}
+			//cout << result.back().start << result.back().end << endl;
+		}
+		
+	}
+	return result;
+}
+
+
+
+/////////////////sort repeated entry////////////
+
+class person{
+public:
+	person(int newAge, string newName){
+		age = newAge;
+		name = newName;
+	}
+	int age;
+	string name;
+};
+
+vector<person> sortRepeatedEntry(vector<person>& arr){
+	unordered_map<int, vector<int>> map;
+	for(int i = 0; i < arr.size(); i++){
+		auto it = map.find(arr[i].age);
+		if(it == map.end()){
+			vector<int> temp = {i};
+			map[arr[i].age] = temp;
+		}
+		else{
+			it->second.push_back(i);
+		}
+	}
+	vector<person> result;
+	for(auto elem : map){
+		for(int i = 0; i < elem.second.size(); i++){
+			result.push_back(arr[elem.second[i]]);
+		}
+	}
+	return result;
+}
+void sortRepeatedEntryLessSpace(vector<person>& arr){
+	unordered_map<int, int> countMap;
+	unordered_map<int, int> offsetMap;
+	for(int i = 0; i < arr.size(); i++){
+		auto it = countMap.find(arr[i].age);
+		if(it == countMap.end()){
+			countMap[arr[i].age] = 1;
+		}
+		else{
+			it->second++;
+		}
+	}
+	int offset = 0;
+	for(auto elem : countMap){
+		cout << "age: " << elem.first << "offset: " << offset << endl;
+		offsetMap[elem.first] = offset;
+		offset+= elem.second;
+	}
+	for(int i = 0; i < arr.size(); i++){
+		auto it = offsetMap.find(arr[0].age);
+		swap(arr[it->second],arr[0]);
+		it->second++;
+	}
+}
+
+void printPersonsArr(vector<person>& arr){
+	for(person elem : arr){
+		cout << elem.name << endl;
+	}
+}
+
+
 
 int main(){
-	Event e1(1,true);
-	Event e4(5,false);
-	Event e2(2,true);
-	Event e6(7,false);
-	Event e3(5,true);
-	Event e5(9,false);
-	vector<Event> input = {e1,e4,e2,e6,e3,e5};
-	cout << maxConcurrentEvent(input) << endl;
+	person p1(14,"Greg");
+	person p2(12,"John");
+	person p3(11,"Andy");
+	person p4(13,"Jim");
+	person p5(12,"Phil");
+	person p6(13,"Bob");
+	person p7(13,"Chip");
+	person p8(14,"Tim");
+	vector<person> input = {p1,p2,p3,p4,p5,p6,p7,p8};
+	sortRepeatedEntryLessSpace(input);
+	printPersonsArr(input);
 }
