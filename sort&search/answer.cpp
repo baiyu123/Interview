@@ -724,18 +724,25 @@ void printPersonsArr(vector<person>& arr){
 	}
 }
 
-
+////////////////////////cap salary/////////////////////
+int calculateCap(vector<int>& salaries, int budget){
+	sort(salaries.begin(),salaries.end());
+	int sum = 0;
+	int index = 0;
+	int pay = 0;
+	for(int i = 0; i < salaries.size(); i++){
+		sum += salaries[i];
+		pay = sum+salaries[i]*(salaries.size()-1-i);
+		if(pay >= budget){
+			index = i;
+			break;
+		}
+	}
+	int difference = pay - budget;
+	return salaries[index]-(difference/(salaries.size()-index));
+}
 
 int main(){
-	person p1(14,"Greg");
-	person p2(12,"John");
-	person p3(11,"Andy");
-	person p4(13,"Jim");
-	person p5(12,"Phil");
-	person p6(13,"Bob");
-	person p7(13,"Chip");
-	person p8(14,"Tim");
-	vector<person> input = {p1,p2,p3,p4,p5,p6,p7,p8};
-	sortRepeatedEntryLessSpace(input);
-	printPersonsArr(input);
+	vector<int> salaries = {90,30,100,40,20,150};
+	cout << calculateCap(salaries,290) << endl;
 }
