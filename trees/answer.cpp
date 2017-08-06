@@ -256,6 +256,62 @@ string compressString(string str){
 	return result;
 }
 
+
+//////////////////////construct binary tree with marker//////
+
+BTNode* constructWithMarkerHelper(vector<int>& preorderVec, int& index){
+	if(preorderVec[index] == -1){
+		return NULL;
+	}
+	else{
+		BTNode* currNode = new BTNode(preorderVec[index]);
+		currNode->left = constructWithMarkerHelper(preorderVec, ++index);
+		currNode->right = constructWithMarkerHelper(preorderVec, ++index);
+		return currNode;
+	}
+}
+
+BTNode* constructWithMarker(vector<int>& preorderVec){
+	int a = 0;
+	BTNode* root = constructWithMarkerHelper(preorderVec, a);
+	return root;
+}
+
+/////////////////////computer exterior///////////////
+void computeExteriorHelper(BTNode* currNode, bool isExterior, vector<int>& result, bool leftExt){
+	if(currNode == NULL) return;
+	if(currNode->left == NULL && currNode->right == NULL){
+		result.push_back(currNode->val);
+		return;
+	}
+	else{
+		if(isExterior){
+			result.push_back(currNode->val);
+		}
+		if(leftExt){
+			computeExteriorHelper(currNode->left, isExterior,result,leftExt);
+			computeExteriorHelper(currNode->right, false, result,leftExt);
+		}
+		else{
+			computeExteriorHelper(currNode->left, false,result,leftExt);
+			computeExteriorHelper(currNode->right, isExterior, result,leftExt);
+		}
+	}
+}
+vector<int> computeExterior(BTNode* root){
+	vector<int> leftExt;
+	vector<int> rightExt;
+	vector<int> rootVec = {root->val};
+	computeExteriorHelper(root->left,true, leftExt,true);
+	computeExteriorHelper(root->right,true, rightExt, false);
+	reverse(rightExt.begin(), rightExt.end());
+	rootVec.insert(rootVec.end(), leftExt.begin(), leftExt.end());
+	rootVec.insert(rootVec.end(), rightExt.begin(), rightExt.end());
+	rootVec.push_back(root->val);
+	return rootVec;
+}
+
+
 int main(){
 	// BTNode* root = new BTNode(1);
 	// BTNode* node1 = new BTNode(2);
@@ -269,9 +325,13 @@ int main(){
 	// node2->emplaceR(node4);
 	// node1->emplaceR(node5);
 	// node5->emplaceR(node6)->emplaceL(node7);
-	// vector<int> preorder = {8,2,6,5,1,3,4,7,9};
+	vector<int> preorder = {8,2,6,-1,-1,5,1,-1,-1,-1,3,-1,4,-1,7,9,-1,-1,-1};
 	// vector<int> inorder = {6,2,1,5,8,3,4,9,7};
-	//BTNode* root1 = reconstructPreIn(preorder, inorder);
+	BTNode* root1 = constructWithMarker(preorder);
+	vector<int> exterior = computeExterior(root1);
+	for(auto elem : exterior){
+		cout << elem << endl;
+	}
 	//cout << root1->val << endl;
 	//preorderTraverse(root1);
 	////////yelp///////
