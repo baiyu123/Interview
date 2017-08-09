@@ -13,10 +13,9 @@ using namespace std;
 
 class manager{
 public:
-	manager(string fill, string price, string output){
-		fillPath = fill;
-		pricePath = price;
-		outputPath = output;
+	manager(string fill, string price, string output)
+	: fillPath(fill), pricePath(price), outputPath(output){
+
 	}
 	void calculatePNL(){
 		ifstream fillFile(fillPath);
@@ -27,41 +26,19 @@ public:
 		uint64_t currTime = currPrice.timeStamp;
 		bool endOfPrice = false;
 		while(true){
+			//we already have the next price data
 			if(currPrice.timeStamp == currTime)
-			priceMap[currPrice.name] = currPrice;
+			emplaceElemToPriceMap(currPrice);
 			uint64_t prevTime;
-			while(true){
-			 	currPrice = parsePrice(priceFile);
-
-			 	//update the map elem until the time is different than the current time
-			 	if(currPrice.timeStamp != currTime||priceFile.eof()){
-			 		prevTime = currTime;
-			 		currTime = currPrice.timeStamp;
-			 		break;
-			 	}
-			 	//update map
-			 	auto priceIt = priceMap.find(currPrice.name);
-			 	if(priceIt != priceMap.end()){
-			 		priceIt->second = currPrice;
-			 	}
-			 	else{
-			 		priceMap[currPrice.name] = currPrice;
-			 	}
-			}
-			priceData currPrice = parsePrice(priceFile);
+			updatePriceMap(currPrice,currTime,prevTime, priceFile);
+			
 			fillData currFill;
-			//this_thread::sleep_for(chrono::seconds(1));
-			bool updatePrice = false;
-			while(!fillFile.eof()&&!updatePrice){
-			 	currFill = parseFill(fillFile);
-			 	if(currFill.timeStamp > prevTime){
-			 		printPNL();
-			 		updatePrice = true;
-			 	}
-			 	processFillRequest(currFill);
-			}
+			bool updatePrice = processFillRequests(currFill,fillFile,prevTime);
+			
+			//print when fill reach end of the file
 			if(!updatePrice){
 				printPNL();
+				break;
 			}
 			if(endOfPrice) break;
 			if(priceFile.eof()){
@@ -120,8 +97,6 @@ private:
 				data.timeStamp = stringTouint64_t(delimit(index, ' ', line));
 				data.name = delimit(++index, ' ', line);
 				data.price = stod(delimit(++index, ' ', line));
-				//cout <<"count " << file.gcount() << endl;
-				//cout << data.timeStamp << " " << data.name << " " << data.price << endl;
 			}
 		}
 		return data;
@@ -135,7 +110,48 @@ private:
 		}
 	}
 
-	void processFillRequest(fillData currFill){
+	void emplaceElemToPriceMap(priceData& currPrice){
+		//update map
+		 	auto priceIt = priceMap.find(currPrice.name);
+		 	if(priceIt != priceMap.end()){
+		 		priceIt->second = currPrice;
+		 	}
+		 	else{
+		 		priceMap[currPrice.name] = currPrice;
+		 	}
+	}
+
+	void updatePriceMap(priceData& currPrice,uint64_t& currTime,uint64_t& prevTime, ifstream& priceFile){
+
+		while(!priceFile.eof()){
+		 	currPrice = parsePrice(priceFile);
+		 	//update the map elem until the time is different than the current time
+		 	if(currPrice.timeStamp != currTime){
+		 		prevTime = currTime;
+		 		currTime = currPrice.timeStamp;
+		 		break;
+		 	}
+		 	prevTime = currTime;
+		 	//update map
+		 	emplaceElemToPriceMap(currPrice);
+		}
+	}
+
+	bool processFillRequests(fillData& currFill, ifstream& fillFile, int prevTime){
+		bool PNLUpdated = false;
+		while(!fillFile.eof()&&!PNLUpdated){
+			 	currFill = parseFill(fillFile);
+			 	if(currFill.timeStamp > prevTime){
+			 		printPNL();
+			 		PNLUpdated = true;
+			 	}
+			 	processSingleFillRequest(currFill);
+		}
+		return PNLUpdated;
+
+	}
+
+	void processSingleFillRequest(fillData currFill){
 		auto it = companysMap.find(currFill.name);
 	 	if(it == companysMap.end()){
 	 		CompanyStock compTemp(currFill.name);
