@@ -12,7 +12,85 @@
 using namespace std;
 
 class manager{
+public:
+	manager(string fill, string price, string output){
+		fillPath = fill;
+		pricePath = price;
+		outputPath = output;
+	}
+	void calculatePNL(){
+		ifstream fillFile(fillPath);
+		ifstream priceFile(pricePath);
+
+		//first price data
+		priceData currPrice = parsePrice(priceFile);
+		uint64_t currTime = currPrice.timeStamp;
+		bool endOfPrice = false;
+		while(true){
+			if(currPrice.timeStamp == currTime)
+			priceMap[currPrice.name] = currPrice;
+			uint64_t prevTime;
+			while(true){
+			 	currPrice = parsePrice(priceFile);
+
+			 	//update the map elem until the time is different than the current time
+			 	if(currPrice.timeStamp != currTime||priceFile.eof()){
+			 		prevTime = currTime;
+			 		currTime = currPrice.timeStamp;
+			 		break;
+			 	}
+			 	//update map
+			 	auto priceIt = priceMap.find(currPrice.name);
+			 	if(priceIt != priceMap.end()){
+			 		priceIt->second = currPrice;
+			 	}
+			 	else{
+			 		priceMap[currPrice.name] = currPrice;
+			 	}
+			}
+			priceData currPrice = parsePrice(priceFile);
+			fillData currFill;
+			//this_thread::sleep_for(chrono::seconds(1));
+			bool updatePrice = false;
+			while(!fillFile.eof()&&!updatePrice){
+			 	currFill = parseFill(fillFile);
+			 	if(currFill.timeStamp > prevTime){
+			 		printPNL();
+			 		updatePrice = true;
+			 	}
+			 	processFillRequest(currFill);
+			}
+			if(!updatePrice){
+				printPNL();
+			}
+			if(endOfPrice) break;
+			if(priceFile.eof()){
+				endOfPrice = true;
+			}
+		}
+		fillFile.close();
+		priceFile.close();
+	}
+
 private:
+	//fill data from the fills file's line
+	struct fillData
+	{
+		uint64_t timeStamp;
+		std::string name;
+		double price;
+		int fillSize;
+		std::string action;
+	};
+	//price data from the prices files
+	struct priceData
+	{
+		uint64_t timeStamp;
+		std::string name;
+		double price;	
+	};
+
+
 	fillData parseFill(ifstream& file){
 		string line;
 		fillData data;
@@ -38,7 +116,6 @@ private:
 			if(!file.eof()){
 				getline(file, line);
 				if(line.size() == 0) return data;
-				cout << line << endl;
 				int index = 2;
 				data.timeStamp = stringTouint64_t(delimit(index, ' ', line));
 				data.name = delimit(++index, ' ', line);
@@ -83,69 +160,16 @@ private:
 
 	unordered_map<string, CompanyStock> companysMap;
 	unordered_map<string, priceData> priceMap;
+	string fillPath;
+	string pricePath;
+	string outputPath;
 
-public:
-	void calculatePNL(string fillPath, string pricePath){
-	ifstream fillFile(fillPath);
-	ifstream priceFile(pricePath);
 
-	//first price data
-	priceData currPrice = parsePrice(priceFile);
-	uint64_t currTime = currPrice.timeStamp;
-	while(!priceFile.eof()){
-		if(currPrice.timeStamp == currTime)
-		priceMap[currPrice.name] = currPrice;
-		uint64_t prevTime;
-		while(true){
-		 	currPrice = parsePrice(priceFile);
-
-		 	//update the map elem until the time is different than the current time
-		 	if(currPrice.timeStamp != currTime||priceFile.eof()){
-		 		prevTime = currTime;
-		 		currTime = currPrice.timeStamp;
-		 		break;
-		 	}
-		 	//update map
-		 	auto priceIt = priceMap.find(currPrice.name);
-		 	if(priceIt != priceMap.end()){
-		 		priceIt->second = currPrice;
-		 	}
-		 	else{
-		 		priceMap[currPrice.name] = currPrice;
-		 	}
-		}
-		priceData currPrice = parsePrice(priceFile);
-		//cout << currPrice.price <<endl;
-		fillData currFill;
-		this_thread::sleep_for(chrono::seconds(1));
-		bool updatePrice = false;
-		while(!fillFile.eof()&&!updatePrice){
-		 	currFill = parseFill(fillFile);
-		 	//cout << currFill.price << endl;
-		 	cout << "fillTime:" << currFill.timeStamp << " pricetime: " << prevTime << endl;
-		 	if(currFill.timeStamp > prevTime){
-		 		cout << "pnl1" << endl;
-		 		printPNL();
-		 		updatePrice = true;
-		 	}
-		 	processFillRequest(currFill);
-		 	// for(auto elem : companysMap){
-		 	// 	cout << "name: "<<elem.second.symbol << "investment: " << elem.second.investment << "fill own: " << elem.second.fillOwned << endl;
-		 	// }
-		}
-		if(!updatePrice){
-			cout << "pnl2" << endl;
-			printPNL();
-		}
-	}
-	fillFile.close();
-	priceFile.close();
-	}
 };
 
 
 int main(){
-	manager mag;
-	mag.calculatePNL("testFill", "testprice");
+	manager mag("testFill", "testprice","output");
+	mag.calculatePNL();
 	return 0;
 }

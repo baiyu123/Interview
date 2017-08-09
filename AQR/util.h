@@ -3,22 +3,7 @@
 #include <sstream>
 #include <iostream>
 
-//fill data from the fills file's line
-struct fillData
-{
-	uint64_t timeStamp;
-	std::string name;
-	double price;
-	int fillSize;
-	std::string action;
-};
-//price data from the prices files
-struct priceData
-{
-	uint64_t timeStamp;
-	std::string name;
-	double price;	
-};
+
 
 //keep track of spending and profit from each symbol
 class CompanyStock{
@@ -26,7 +11,7 @@ public:
 	std::string symbol = "";
 	double investment;
 	int fillOwned;
-//public:
+public:
 	CompanyStock(){
 		symbol = "";
 		investment = 0;
